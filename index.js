@@ -9,10 +9,10 @@ const client = new ECSClient();
 const cluster = core.getInput('cluster_name');
 const serviceName = core.getInput('service_name');
 const taskDefinitionFile = core.getInput('task_definition');
-const desiredCount = core.getInput('desired_count');
-const enableExecuteCommand = core.getInput('enable_execute_command');
+const desiredCount = parseInt(core.getInput('desired_count'));
+const enableExecuteCommand = !!core.getInput('enable_execute_command');
 const launchType = core.getInput('launch_type');
-const assignPublicIp = core.getInput('assign_public_ip');
+const assignPublicIp = !!core.getInput('assign_public_ip');
 
 const tags = core.getInput('service_tags').split(',').map(tag => { 
   const components = tag.split('=');
@@ -37,7 +37,7 @@ const taskDefinition = JSON.parse(fs.readFileSync(taskDefinitionPath, 'utf8'));
 const registerTaskDefinitionCommand = new RegisterTaskDefinitionCommand(taskDefinition);
 const registerTaskDefinitionResponse = await client.send(registerTaskDefinitionCommand);
 
-console.log(JSON.stringify(registerTaskDefinitionResponse));
+console.log("Task Definition Response:", JSON.stringify(registerTaskDefinitionResponse));
 
 const taskDefinitionArn = registerTaskDefinitionResponse.taskDefinition.taskDefinitionArn;
 
@@ -54,7 +54,7 @@ const listServicesInput = {
 const listServicesCommand = new ListServicesCommand(listServicesInput);
 const listServicesResponse = await client.send(listServicesCommand);
 
-console.log(JSON.stringify(listServicesResponse));
+console.log("List Services Response:", JSON.stringify(listServicesResponse));
 
 
 const services = listServicesResponse.serviceArns.filter(service => service.includes(serviceName));
@@ -83,7 +83,7 @@ if(services.length > 0) {
   const updateServiceCommand = new UpdateServiceCommand(updateServiceInput);
   const updateServiceResponse = await client.send(updateServiceCommand);
 
-  console.log(JSON.stringify(updateServiceResponse))
+  console.log("Update Service Response:", JSON.stringify(updateServiceResponse))
 
 
   const serviceArn = updateServiceResponse.service.serviceArn;
@@ -98,7 +98,7 @@ if(services.length > 0) {
   const updateServiceTagsCommand = new TagResourceCommand(updateServiceTagsInput);
   const updateServiceTagsResponse = await client.send(updateServiceTagsCommand);
 
-  console.log(JSON.stringify(updateServiceTagsResponse));
+  console.log("Update Service Tags Response:", JSON.stringify(updateServiceTagsResponse));
 
 
 } else {
@@ -127,6 +127,6 @@ if(services.length > 0) {
   const createServiceCommand = new CreateServiceCommand(createServiceInput);
   const createServiceResponse = await client.send(createServiceCommand);
 
-  console.log(JSON.stringify(createServiceResponse));
+  console.log("Create Service Response:", JSON.stringify(createServiceResponse));
 
 }

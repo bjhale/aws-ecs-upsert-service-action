@@ -52702,10 +52702,10 @@ const client = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_4__.ECSClient();
 const cluster = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('cluster_name');
 const serviceName = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('service_name');
 const taskDefinitionFile = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('task_definition');
-const desiredCount = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('desired_count');
-const enableExecuteCommand = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('enable_execute_command');
+const desiredCount = parseInt(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('desired_count'));
+const enableExecuteCommand = !!_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('enable_execute_command');
 const launchType = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('launch_type');
-const assignPublicIp = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('assign_public_ip');
+const assignPublicIp = !!_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('assign_public_ip');
 
 const tags = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('service_tags').split(',').map(tag => { 
   const components = tag.split('=');
@@ -52730,7 +52730,7 @@ const taskDefinition = JSON.parse(fs__WEBPACK_IMPORTED_MODULE_2__.readFileSync(t
 const registerTaskDefinitionCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_4__.RegisterTaskDefinitionCommand(taskDefinition);
 const registerTaskDefinitionResponse = await client.send(registerTaskDefinitionCommand);
 
-console.log(JSON.stringify(registerTaskDefinitionResponse));
+console.log("Task Definition Response:", JSON.stringify(registerTaskDefinitionResponse));
 
 const taskDefinitionArn = registerTaskDefinitionResponse.taskDefinition.taskDefinitionArn;
 
@@ -52747,7 +52747,7 @@ const listServicesInput = {
 const listServicesCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_4__.ListServicesCommand(listServicesInput);
 const listServicesResponse = await client.send(listServicesCommand);
 
-console.log(JSON.stringify(listServicesResponse));
+console.log("List Services Response:", JSON.stringify(listServicesResponse));
 
 
 const services = listServicesResponse.serviceArns.filter(service => service.includes(serviceName));
@@ -52776,7 +52776,7 @@ if(services.length > 0) {
   const updateServiceCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_4__.UpdateServiceCommand(updateServiceInput);
   const updateServiceResponse = await client.send(updateServiceCommand);
 
-  console.log(JSON.stringify(updateServiceResponse))
+  console.log("Update Service Response:", JSON.stringify(updateServiceResponse))
 
 
   const serviceArn = updateServiceResponse.service.serviceArn;
@@ -52791,7 +52791,7 @@ if(services.length > 0) {
   const updateServiceTagsCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_4__.TagResourceCommand(updateServiceTagsInput);
   const updateServiceTagsResponse = await client.send(updateServiceTagsCommand);
 
-  console.log(JSON.stringify(updateServiceTagsResponse));
+  console.log("Update Service Tags Response:", JSON.stringify(updateServiceTagsResponse));
 
 
 } else {
@@ -52820,7 +52820,7 @@ if(services.length > 0) {
   const createServiceCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_4__.CreateServiceCommand(createServiceInput);
   const createServiceResponse = await client.send(createServiceCommand);
 
-  console.log(JSON.stringify(createServiceResponse));
+  console.log("Create Service Response:", JSON.stringify(createServiceResponse));
 
 }
 
