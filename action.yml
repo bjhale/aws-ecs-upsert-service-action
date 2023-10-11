@@ -13,11 +13,11 @@ inputs:
   desired_count:
     description: 'Number of tasks to run'
     required: false
-    default: 1
+    default: "1"
   enable_execute_command:
     description: 'Enable ECS execute command'
     required: false
-    default: false
+    default: "false"
   launch_type:
     description: 'Launch type for service'
     required: false
