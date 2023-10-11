@@ -1,8 +1,8 @@
-import { ECSClient, CreateServiceCommand, ListServicesCommand, RegisterTaskDefinitionCommand, UpdateServiceCommand, CreateServiceCommand, TagResourceCommand } from '@aws-sdk/client-ecs';
+import { ECSClient, CreateServiceCommand, ListServicesCommand, RegisterTaskDefinitionCommand, UpdateServiceCommand, TagResourceCommand } from '@aws-sdk/client-ecs';
 import core from '@actions/core';
-import github from '@actions/github';
 import path from 'path';
 import fs from 'fs';
+import process from 'process';
 
 const client = new ECSClient();
 
@@ -33,14 +33,11 @@ const securityGroups = core.getInput('security_groups').split(',');
 const taskDefinitionPath = path.isAbsolute(taskDefinitionFile) ? taskDefinitionFile : path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile);
 const taskDefinition = JSON.parse(fs.readFileSync(taskDefinitionPath, 'utf8'));
 
-try {
-  const registerTaskDefinitionCommand = new RegisterTaskDefinitionCommand(taskDefinition);
-  const registerTaskDefinitionResponse = await client.send(registerTaskDefinitionCommand);
-  
-  console.log(JSON.stringify(registerTaskDefinitionResponse));
-} catch(error) {
-  core.setFailed(error.message);
-}
+
+const registerTaskDefinitionCommand = new RegisterTaskDefinitionCommand(taskDefinition);
+const registerTaskDefinitionResponse = await client.send(registerTaskDefinitionCommand);
+
+console.log(JSON.stringify(registerTaskDefinitionResponse));
 
 const taskDefinitionArn = registerTaskDefinitionResponse.taskDefinition.taskDefinitionArn;
 
@@ -53,14 +50,12 @@ const listServicesInput = {
   maxResults: 100
 };
 
-try {
-  const listServicesCommand = new ListServicesCommand(listServicesInput);
-  const listServicesResponse = await client.send(listServicesCommand);
-  
-  console.log(JSON.stringify(listServicesResponse));
-} catch(error) {
-  core.setFailed(error.message);
-}
+
+const listServicesCommand = new ListServicesCommand(listServicesInput);
+const listServicesResponse = await client.send(listServicesCommand);
+
+console.log(JSON.stringify(listServicesResponse));
+
 
 const services = listServicesResponse.serviceArns.filter(service => service.includes(serviceName));
 
@@ -71,20 +66,25 @@ if(services.length > 0) {
 
   const updateServiceInput = {
     cluster,
-    service,
+    service: serviceName,
     desiredCount,
     taskDefinition: taskDefinitionArn,
     forceNewDeployment: true,
+    networkConfiguration: {
+      awsvpcConfiguration: {
+        subnets,
+        securityGroups,
+        assignPublicIp
+      }
+    }
   }
 
-  try {
-    const updateServiceCommand = new UpdateServiceCommand(updateServiceInput);
-    const updateServiceResponse = await client.send(updateServiceCommand);
-  
-    console.log(JSON.stringify(updateServiceResponse))
-  } catch(error) {
-    core.setFailed(error.message);
-  }
+
+  const updateServiceCommand = new UpdateServiceCommand(updateServiceInput);
+  const updateServiceResponse = await client.send(updateServiceCommand);
+
+  console.log(JSON.stringify(updateServiceResponse))
+
 
   const serviceArn = updateServiceResponse.service.serviceArn;
 
@@ -94,14 +94,12 @@ if(services.length > 0) {
     tags,
   }
 
-  try {
-    const updateServiceTagsCommand = new TagResourceCommand(updateServiceTagsInput);
-    const updateServiceTagsResponse = await client.send(updateServiceTagsCommand);
 
-    console.log(JSON.stringify(updateServiceTagsResponse));
-  } catch(error) {
-    core.setFailed(error.message);
-  }
+  const updateServiceTagsCommand = new TagResourceCommand(updateServiceTagsInput);
+  const updateServiceTagsResponse = await client.send(updateServiceTagsCommand);
+
+  console.log(JSON.stringify(updateServiceTagsResponse));
+
 
 } else {
   /**
@@ -115,15 +113,20 @@ if(services.length > 0) {
     desiredCount,
     launchType,
     enableExecuteCommand,
+    assignPublicIp,
+    networkConfiguration: {
+      awsvpcConfiguration: {
+        subnets,
+        securityGroups,
+        assignPublicIp
+      }
+    },
     tags
   }
 
-  try {
-    const createServiceCommand = new CreateServiceCommand(createServiceInput);
-    const createServiceResponse = await client.send(createServiceCommand);
+  const createServiceCommand = new CreateServiceCommand(createServiceInput);
+  const createServiceResponse = await client.send(createServiceCommand);
 
-    console.log(JSON.stringify(createServiceResponse));
-  } catch(error) {
-    core.setFailed(error.message);
-  }
+  console.log(JSON.stringify(createServiceResponse));
+
 }

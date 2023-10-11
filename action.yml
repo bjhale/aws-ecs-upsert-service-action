@@ -11,12 +11,15 @@ inputs:
     required: false
     default: ''
   desired_count:
+    description: 'Number of tasks to run'
     required: false
     default: 1
   enable_execute_command:
+    description: 'Enable ECS execute command'
     required: false
     default: false
   launch_type:
+    description: 'Launch type for service'
     required: false
     default: EC2
   subnets:
@@ -28,8 +31,9 @@ inputs:
     required: false
     default: ''
   assign_public_ip:
+    description: 'Assign public IP to tasks'
     required: false
-    default: false
+    default: "false"
 runs:
   using: 'node20'
   main: 'dist/index.js'
