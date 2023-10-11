@@ -52767,7 +52767,7 @@ if(services.length > 0) {
       awsvpcConfiguration: {
         subnets,
         securityGroups,
-        assignPublicIp
+        assignPublicIp: assignPublicIp ? 'ENABLED' : 'DISABLED'
       }
     }
   }
@@ -52811,7 +52811,7 @@ if(services.length > 0) {
       awsvpcConfiguration: {
         subnets,
         securityGroups,
-        assignPublicIp
+        assignPublicIp: assignPublicIp ? 'ENABLED' : 'DISABLED'
       }
     },
     tags
