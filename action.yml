@@ -1,0 +1,35 @@
+name: 'AWS ECS Upsert Service Action'
+description: 'Updates ECS service with new task definition, creates service if it does not exist'
+inputs:
+  cluster_name:
+  service_name:
+  task_definition:
+    description: 'Path to task definition file'
+    required: true
+  service_tags:
+    description: 'Comma separated key=value pairs of tags to apply to service'
+    required: false
+    default: ''
+  desired_count:
+    required: false
+    default: 1
+  enable_execute_command:
+    required: false
+    default: false
+  launch_type:
+    required: false
+    default: EC2
+  subnets:
+    description: 'Comma separated list of subnet ids'
+    required: false
+    default: ''
+  security_groups:
+    description: 'Comma separated list of security group ids'
+    required: false
+    default: ''
+  assign_public_ip:
+    required: false
+    default: false
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
