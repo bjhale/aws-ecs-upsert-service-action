@@ -2,7 +2,11 @@ name: 'AWS ECS Upsert Service Action'
 description: 'Updates ECS service with new task definition, creates service if it does not exist'
 inputs:
   cluster_name:
+    description: 'Name of ECS cluster'
+    required: true
   service_name:
+    description: 'Name of ECS service'
+    required: true
   task_definition:
     description: 'Path to task definition file'
     required: true
