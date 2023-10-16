@@ -52752,14 +52752,17 @@ console.log("List Services Response:", JSON.stringify(listServicesResponse));
 
 const services = listServicesResponse.serviceArns.filter(service => service.includes(serviceName));
 
+console.log('Found Services: ', JSON.stringify(services));
+
 if(services.length > 0) {
+  console.log('Updating Existing Service: ', services[0]);
   /**
    * Update Existing Service
    */
 
   const updateServiceInput = {
     cluster,
-    service: serviceName,
+    service: services[0],
     desiredCount,
     taskDefinition: taskDefinitionArn,
     forceNewDeployment: true,
@@ -52795,6 +52798,7 @@ if(services.length > 0) {
 
 
 } else {
+  console.log('Creating New Service: ', serviceName);
   /**
    * Create New Service
    */
