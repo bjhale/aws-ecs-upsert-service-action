@@ -36,6 +36,7 @@ const securityGroups = core.getInput('security_groups').split(',');
 const taskDefinitionPath = path.isAbsolute(taskDefinitionFile) ? taskDefinitionFile : path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFile);
 const taskDefinition = JSON.parse(fs.readFileSync(taskDefinitionPath, 'utf8'));
 
+console.log("Task Definition Request: ", JSON.stringify(taskDefinition));
 
 const registerTaskDefinitionCommand = new RegisterTaskDefinitionCommand(taskDefinition);
 const registerTaskDefinitionResponse = await client.send(registerTaskDefinitionCommand);
@@ -53,6 +54,7 @@ const listServicesInput = {
   maxResults: 100
 };
 
+console.log("List Services Request: ", JSON.stringify(listServicesInput));
 
 const listServicesCommand = new ListServicesCommand(listServicesInput);
 const listServicesResponse = await client.send(listServicesCommand);
@@ -87,6 +89,7 @@ if(services.length > 0) {
     }
   }
 
+  console.log("Update Service Request: ", JSON.stringify(updateServiceInput));
 
   const updateServiceCommand = new UpdateServiceCommand(updateServiceInput);
   const updateServiceResponse = await client.send(updateServiceCommand);
@@ -102,6 +105,7 @@ if(services.length > 0) {
     tags,
   }
 
+  console.log("Update Service Tags Request: ", JSON.stringify(updateServiceTagsInput));
 
   const updateServiceTagsCommand = new TagResourceCommand(updateServiceTagsInput);
   const updateServiceTagsResponse = await client.send(updateServiceTagsCommand);
@@ -134,6 +138,8 @@ if(services.length > 0) {
     },
     tags
   }
+
+  console.log("Create Service Request: ", JSON.stringify(createServiceInput));
 
   const createServiceCommand = new CreateServiceCommand(createServiceInput);
   const createServiceResponse = await client.send(createServiceCommand);

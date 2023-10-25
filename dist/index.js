@@ -61082,6 +61082,7 @@ const securityGroups = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('secu
 const taskDefinitionPath = path__WEBPACK_IMPORTED_MODULE_2__.isAbsolute(taskDefinitionFile) ? taskDefinitionFile : path__WEBPACK_IMPORTED_MODULE_2__.join(process__WEBPACK_IMPORTED_MODULE_4__.env.GITHUB_WORKSPACE, taskDefinitionFile);
 const taskDefinition = JSON.parse(fs__WEBPACK_IMPORTED_MODULE_3__.readFileSync(taskDefinitionPath, 'utf8'));
 
+console.log("Task Definition Request: ", JSON.stringify(taskDefinition));
 
 const registerTaskDefinitionCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_5__.RegisterTaskDefinitionCommand(taskDefinition);
 const registerTaskDefinitionResponse = await client.send(registerTaskDefinitionCommand);
@@ -61099,6 +61100,7 @@ const listServicesInput = {
   maxResults: 100
 };
 
+console.log("List Services Request: ", JSON.stringify(listServicesInput));
 
 const listServicesCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_5__.ListServicesCommand(listServicesInput);
 const listServicesResponse = await client.send(listServicesCommand);
@@ -61133,6 +61135,7 @@ if(services.length > 0) {
     }
   }
 
+  console.log("Update Service Request: ", JSON.stringify(updateServiceInput));
 
   const updateServiceCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_5__.UpdateServiceCommand(updateServiceInput);
   const updateServiceResponse = await client.send(updateServiceCommand);
@@ -61148,6 +61151,7 @@ if(services.length > 0) {
     tags,
   }
 
+  console.log("Update Service Tags Request: ", JSON.stringify(updateServiceTagsInput));
 
   const updateServiceTagsCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_5__.TagResourceCommand(updateServiceTagsInput);
   const updateServiceTagsResponse = await client.send(updateServiceTagsCommand);
@@ -61180,6 +61184,8 @@ if(services.length > 0) {
     },
     tags
   }
+
+  console.log("Create Service Request: ", JSON.stringify(createServiceInput));
 
   const createServiceCommand = new _aws_sdk_client_ecs__WEBPACK_IMPORTED_MODULE_5__.CreateServiceCommand(createServiceInput);
   const createServiceResponse = await client.send(createServiceCommand);
