@@ -1,5 +1,6 @@
 import { ECSClient, CreateServiceCommand, ListServicesCommand, RegisterTaskDefinitionCommand, UpdateServiceCommand, TagResourceCommand } from '@aws-sdk/client-ecs';
 import core from '@actions/core';
+import yaml from 'yaml';
 import path from 'path';
 import fs from 'fs';
 import process from 'process';
@@ -13,6 +14,8 @@ const desiredCount = parseInt(core.getInput('desired_count'));
 const enableExecuteCommand = !!core.getInput('enable_execute_command');
 const launchType = core.getInput('launch_type');
 const assignPublicIp = !!core.getInput('assign_public_ip');
+const loadBalancers = yaml.parse(core.getInput('load_balancers'));
+const serviceRegistries = yaml.parse(core.getInput('service_registries'));
 
 const tags = core.getInput('service_tags').split(',').map(tag => { 
   const components = tag.split('=');
@@ -72,6 +75,8 @@ if(services.length > 0) {
     service: services[0],
     desiredCount,
     taskDefinition: taskDefinitionArn,
+    loadBalancers,
+    serviceRegistries,
     forceNewDeployment: true,
     networkConfiguration: {
       awsvpcConfiguration: {
@@ -114,6 +119,8 @@ if(services.length > 0) {
     cluster,
     serviceName,
     taskDefinition: taskDefinitionArn,
+    loadBalancers,
+    serviceRegistries,
     desiredCount,
     launchType,
     enableExecuteCommand,

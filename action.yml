@@ -10,6 +10,12 @@ inputs:
   task_definition:
     description: 'Path to task definition file'
     required: true
+  load_balancers:
+    description: ''
+    required: false
+  service_registries:
+    description: ''
+    required: false
   service_tags:
     description: 'Comma separated key=value pairs of tags to apply to service'
     required: false
