@@ -61057,9 +61057,9 @@ const cluster = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('cluster_nam
 const serviceName = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('service_name');
 const taskDefinitionFile = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('task_definition');
 const desiredCount = parseInt(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('desired_count'));
-const enableExecuteCommand = !!_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('enable_execute_command');
+const enableExecuteCommand = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('enable_execute_command') === 'true' ? true : false;
 const launchType = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('launch_type');
-const assignPublicIp = !!_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('assign_public_ip');
+const assignPublicIp = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('assign_public_ip') === 'true' ? true : false;
 const loadBalancers = yaml__WEBPACK_IMPORTED_MODULE_1__.parse(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('load_balancers'));
 const serviceRegistries = yaml__WEBPACK_IMPORTED_MODULE_1__.parse(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('service_registries'));
 

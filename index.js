@@ -11,9 +11,9 @@ const cluster = core.getInput('cluster_name');
 const serviceName = core.getInput('service_name');
 const taskDefinitionFile = core.getInput('task_definition');
 const desiredCount = parseInt(core.getInput('desired_count'));
-const enableExecuteCommand = !!core.getInput('enable_execute_command');
+const enableExecuteCommand = core.getInput('enable_execute_command') === 'true' ? true : false;
 const launchType = core.getInput('launch_type');
-const assignPublicIp = !!core.getInput('assign_public_ip');
+const assignPublicIp = core.getInput('assign_public_ip') === 'true' ? true : false;
 const loadBalancers = yaml.parse(core.getInput('load_balancers'));
 const serviceRegistries = yaml.parse(core.getInput('service_registries'));
 
