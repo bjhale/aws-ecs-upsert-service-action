@@ -61062,6 +61062,8 @@ const launchType = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('launch_t
 const assignPublicIp = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('assign_public_ip') === 'true' ? true : false;
 const loadBalancers = yaml__WEBPACK_IMPORTED_MODULE_1__.parse(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('load_balancers'));
 const serviceRegistries = yaml__WEBPACK_IMPORTED_MODULE_1__.parse(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('service_registries'));
+const deploymentCircuitBreakerEnable = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('deployment_circuit_breaker_enable') === 'true' ? true : false;
+const deploymentCircuitBreakerRollback = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('deployment_circuit_breaker_rollback') === 'true' ? true : false;
 
 const tags = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('service_tags').split(',').map(tag => { 
   const components = tag.split('=');
@@ -61074,6 +61076,17 @@ const tags = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('service_tags')
 const subnets = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('subnets').split(',');
 
 const securityGroups = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('security_groups').split(',');
+
+/**
+ * Deployment Configuration
+ */
+const deploymentConfiguration = {
+  deploymentCircuitBreaker : {
+    enable: deploymentCircuitBreakerEnable,
+    rollback: deploymentCircuitBreakerRollback
+  }
+};
+
 
 /**
  * Register Task Definition
@@ -61125,6 +61138,7 @@ if(services.length > 0) {
     taskDefinition: taskDefinitionArn,
     loadBalancers,
     serviceRegistries,
+    deploymentConfiguration,
     forceNewDeployment: true,
     networkConfiguration: {
       awsvpcConfiguration: {
@@ -61171,6 +61185,7 @@ if(services.length > 0) {
     taskDefinition: taskDefinitionArn,
     loadBalancers,
     serviceRegistries,
+    deploymentConfiguration,
     desiredCount,
     launchType,
     enableExecuteCommand,

@@ -16,6 +16,8 @@ const launchType = core.getInput('launch_type');
 const assignPublicIp = core.getInput('assign_public_ip') === 'true' ? true : false;
 const loadBalancers = yaml.parse(core.getInput('load_balancers'));
 const serviceRegistries = yaml.parse(core.getInput('service_registries'));
+const deploymentCircuitBreakerEnable = core.getInput('deployment_circuit_breaker_enable') === 'true' ? true : false;
+const deploymentCircuitBreakerRollback = core.getInput('deployment_circuit_breaker_rollback') === 'true' ? true : false;
 
 const tags = core.getInput('service_tags').split(',').map(tag => { 
   const components = tag.split('=');
@@ -28,6 +30,17 @@ const tags = core.getInput('service_tags').split(',').map(tag => {
 const subnets = core.getInput('subnets').split(',');
 
 const securityGroups = core.getInput('security_groups').split(',');
+
+/**
+ * Deployment Configuration
+ */
+const deploymentConfiguration = {
+  deploymentCircuitBreaker : {
+    enable: deploymentCircuitBreakerEnable,
+    rollback: deploymentCircuitBreakerRollback
+  }
+};
+
 
 /**
  * Register Task Definition
@@ -79,6 +92,7 @@ if(services.length > 0) {
     taskDefinition: taskDefinitionArn,
     loadBalancers,
     serviceRegistries,
+    deploymentConfiguration,
     forceNewDeployment: true,
     networkConfiguration: {
       awsvpcConfiguration: {
@@ -125,6 +139,7 @@ if(services.length > 0) {
     taskDefinition: taskDefinitionArn,
     loadBalancers,
     serviceRegistries,
+    deploymentConfiguration,
     desiredCount,
     launchType,
     enableExecuteCommand,

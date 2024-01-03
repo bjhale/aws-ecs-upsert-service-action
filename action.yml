@@ -40,6 +40,14 @@ inputs:
     description: 'Comma separated list of security group ids'
     required: false
     default: ''
+  deployment_circuit_breaker_enable:
+    description: 'Enable deployment circuit breaker'
+    required: false
+    default: "true"
+  deployment_circuit_breaker_rollback:
+    description: 'Enable deployment circuit breaker rollback'
+    required: false
+    default: "true"
   assign_public_ip:
     description: 'Assign public IP to tasks'
     required: false
